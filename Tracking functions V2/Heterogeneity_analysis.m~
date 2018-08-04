@@ -4,19 +4,13 @@ fprintf('\nUser defined point selection still in development. Not implemented in
         lowCutoff = 0;
         highCutoff = 1;
         pointSelection = 0;
-        fprintf('You forgot to set the low cutoff high cutoff and whether you want to select points of interest (use 1 for yes).\nI set these values to 0, 1 and 0, respectively. This is equivalent to typing: "Heterogeneity_analysis(0,1,0)"\n\n');
+        fprintf('You forgot to set the low cutoff high cutoff and whether you want to select points of interest (use 1 for yes).\nI set these values to 0, 1 and 0, respectively.\n\n');
     end
         
     [filenames_tracks,path_tracks] = uigetfile('multiselect','on','.mat','Select tracked file to find heterogenity ');
     [filenames_bf,path_bf] =uigetfile('multiselect','on','.jpg','Select the corresponding BF image');
 
     singleTrackvsManyTracks  = iscell(filenames_tracks);
-    
-    prompt = {'Enter desired filter width','Enter desired filter sigma'};
-    title = 'Deff heterogeneity gaussian filter settings';
-    dims = [1 35];
-    definput = {'6','2'};
-    filterSettings = inputdlg(prompt,title,dims,definput);
 
 if singleTrackvsManyTracks == 0
     cd(path_tracks)
@@ -27,9 +21,9 @@ if singleTrackvsManyTracks == 0
 
     cd(path_bf)
     im = imread(filenames_bf);
-    imageName = filenames_bf;
+    imageName = filenames_bf
     
-    Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection, filterSettings);
+    Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection);
 else
     for w = 1:length(filenames_tracks)
         cd(path_tracks)
@@ -43,15 +37,15 @@ else
 
         imageName = filenames_bf{w};
         
-        Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection, filterSettings);
-        clearvars -except filenames_bf filenames_tracks path_bf path_tracks lowCutoff highCutoff pointSelection filterSettings
+        Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection);
+        clearvars -except filenames_bf filenames_tracks path_bf path_tracks lowCutoff highCutoff pointSelection
 
 
     end
 end
 end
 
-function Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection, filterSettings);
+function Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection);
 
     x = result.lin.Dlin_centroid_x{:};
     y = result.lin.Dlin_centroid_y{:};
@@ -93,8 +87,8 @@ function Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection,
     data(nanMask) = interpVals;
 
     % Filter the data, replacing Nans afterward:
-    filtWidth = str2double(filterSettings{1});
-    filtSigma = str2double(filterSettings{2}); 
+    filtWidth = 5;
+    filtSigma = 2; 
 
     imageFilter=fspecial('gaussian',filtWidth,filtSigma);
 
