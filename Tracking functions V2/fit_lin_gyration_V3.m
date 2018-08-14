@@ -17,6 +17,11 @@ for k = 1:length(filename)
 
 result = struct();
 disp(filename{k})
+   if exist(fullfile(cd, filename{k}), 'file') == 0
+        continue
+   end
+       
+
 result = importdata(filename{k});
 
 num_tracks = size(result,1);
@@ -25,7 +30,7 @@ if num_tracks == 1
 end
 
 %% Linear fit of all the trajectories that have a min length > min_track_length_lin
- 
+ %exist(fullfile(cd, 'tracked_Traj_atg13_rep2_3_2.tif.mat'), 'file')
 isolate_idx = [];
     
 if min_track_length_lin < 11

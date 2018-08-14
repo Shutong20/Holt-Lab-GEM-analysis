@@ -21,7 +21,9 @@ next_step = [];
 corr_next = [];
 
 for i = 1:length(filename)
-    
+   if exist(fullfile(cd, filename{i}), 'file') == 0
+        continue
+   end
     res = importdata(filename{i});
 
     Dlin = [Dlin;res.lin.D_lin{1}(:)];
