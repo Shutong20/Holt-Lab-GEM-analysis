@@ -59,8 +59,8 @@ function Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection,
     x2 = y;
     y2 = x;
 
-    x = x2;
-    y = y2; % somehow I flipped them - will fix this later
+   % x = x2;
+    %y = y2; % somehow I flipped them - will fix this later
 
     x_length = length(im(:,1));
     y_length = length(im(1,:));
@@ -99,6 +99,7 @@ function Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection,
     imageFilter=fspecial('gaussian',filtWidth,filtSigma);
 
     dataFiltered = imfilter(data, imageFilter, 'replicate', 'conv');
+    % should probably change this to imgaussfilt later
     dataFiltered(nanMask) = nan;
 %%
     oppNaN = 1- nanMask;

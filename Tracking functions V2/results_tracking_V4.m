@@ -82,7 +82,10 @@ filename = filenames_this_condition{m};
 
 
 idx = find(diff(Trajectory) > 0);
-
+if isempty(idx)
+    continue
+end
+    
 S = [];
 for i = 1:length(idx)
     if i < 10
