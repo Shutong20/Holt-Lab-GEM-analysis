@@ -38,3 +38,6 @@ names = filename'
 set(gca, 'XTick', 1:length(names),'XTickLabel',names);
 set(gca,'xticklabel',names)
 set(gca,'XTickLabelRotation',45)
+
+clear all
+

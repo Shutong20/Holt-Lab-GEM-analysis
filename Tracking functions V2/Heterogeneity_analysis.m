@@ -1,5 +1,6 @@
 function Heterogeneity_analysis(lowCutoff, highCutoff, pointSelection);
 fprintf('\nUser defined point selection still in development. Not implemented in V2 yet\n\n\n');
+
     if nargin <3
         lowCutoff = 0;
         highCutoff = 1;
@@ -8,6 +9,7 @@ fprintf('\nUser defined point selection still in development. Not implemented in
     end
         
     [filenames_tracks,path_tracks] = uigetfile('multiselect','on','.mat','Select tracked file to find heterogenity ');
+    cd(path_tracks);
     [filenames_bf,path_bf] =uigetfile('multiselect','on','.jpg','Select the corresponding BF image');
 
     singleTrackvsManyTracks  = iscell(filenames_tracks);
@@ -59,8 +61,8 @@ function Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection,
     x2 = y;
     y2 = x;
 
-   % x = x2;
-    %y = y2; % somehow I flipped them - will fix this later
+    x = x2;
+    y = y2; % somehow I flipped them - will fix this later
 
     x_length = length(im(:,1));
     y_length = length(im(1,:));
@@ -101,18 +103,39 @@ function Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection,
     dataFiltered = imfilter(data, imageFilter, 'replicate', 'conv');
     % should probably change this to imgaussfilt later
     dataFiltered(nanMask) = nan;
-%%
+%%  
+    %imputed = knnimpute(dataFiltered,1, 'Distance', 'Euclidean');
     oppNaN = 1- nanMask;
-
+    
+          values = [];
+          %dataFiltered(dim1,dime2)
+          %values = 
+          for x = 4:length(dataFiltered(:,1))-4 % should set a value to change what width to expand data
+               for y = 4:length(dataFiltered(1,:))-4  % should set a value to change what width to expand data
+                   values(x,y) = nanmean(nanmean(dataFiltered(x-3:x+3, y-3:y+3))); % should set a value to change what width to expand data
+               end
+          end
+          
+     values(1:200,250:683) = 0;      
+     values(500:565,600:683) = 0;
+    values(values >= 0.5) = 0;
+    values(values == 0) = NaN;
+    nanMask_expanded  = isnan(values);
+    oppNaN = 1 - nanMask_expanded;
+    
     figure('DefaultAxesFontSize',25);
     ax1 = axes;
     imagesc(im);
     colormap(ax1, 'gray');
     ax = gca;
     ax2 = axes;
-    im = imagesc(ax2, dataFiltered);
+    %im = imagesc(ax2, dataFiltered); %only shows real data
+    im = imagesc(ax2,values); % shows expanded data
     im.AlphaData = (oppNaN );
-    colormap(ax2, 'jet');caxis([lowCutoff highCutoff]);
+    mymap = load('HeterogeneityColormapRedYellowGreen.mat');
+    colormap(ax2, mymap.mymap);
+    caxis([lowCutoff highCutoff]); % use this for custom colormap loaded from previous command
+    %colormap(ax2, 'jet');caxis([lowCutoff highCutoff]);
     ax2.Visible = 'off';
     ax.Visible = 'off';
     linkprop([ax1 ax2],'Position');
