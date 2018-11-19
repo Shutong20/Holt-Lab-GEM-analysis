@@ -8,6 +8,7 @@ filename
     Dlin_err = [];
     Dlin_gof_rsquare = [];
     Dlin_gof_rmse = [];
+    Dlin_tracklength = [];
 
     corr_fit = cell(1,2);
     Dcorr = [];
@@ -34,6 +35,7 @@ filename
         Dlin_err = [Dlin_err;res.lin.D_lin_err{1}(:)];
         Dlin_gof_rsquare = [Dlin_gof_rsquare;res.lin.gof_rsquare{1}(:)];
         Dlin_gof_rmse = [Dlin_gof_rmse;res.lin.gof_rmse{1}(:)];
+        Dlin_tracklength = [Dlin_tracklength;res.lin.track_length{1}(:)];
 
 
 
@@ -68,7 +70,7 @@ filename
     MSD_ens = mean(MSD_e,1);
     MSD_time = mean(MSD_t,1);
 
-    lin_fit = {{Dlin},{Dlin_err},{Dlin_gof_rsquare},{Dlin_gof_rmse}};
+    lin_fit = {{Dlin},{Dlin_err},{Dlin_gof_rsquare},{Dlin_gof_rmse},{Dlin_tracklength}};
     corr_fit = {{Dcorr},{Rc}};
     MSD = {{MSD_ens},{MSD_time}};
 
@@ -102,7 +104,7 @@ filename
 
     row_headings = {'D_corr','R_c'};
     extract_corr = cell2struct(corr_fit,row_headings,2);
-    row_headings = {'D_lin','D_lin_err','gof_rsquare','gof_rmse'};
+    row_headings = {'D_lin','D_lin_err','gof_rsquare','gof_rmse','track_length'};
     extract_lin = cell2struct(lin_fit,row_headings,2);
     row_headings = {'MSD_ens','MSD_time'};
     extract_MSD = cell2struct(MSD,row_headings,2);

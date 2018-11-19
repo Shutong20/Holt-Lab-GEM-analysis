@@ -53,7 +53,7 @@ else
 end
 end
 
-function Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection, filterSettings);
+function Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection, filterSettings)
 
     x = result.lin.Dlin_centroid_x{:};
     y = result.lin.Dlin_centroid_y{:};
@@ -110,16 +110,16 @@ function Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection,
           values = [];
           %dataFiltered(dim1,dime2)
           %values = 
-          for x = 4:length(dataFiltered(:,1))-4 % should set a value to change what width to expand data
-               for y = 4:length(dataFiltered(1,:))-4  % should set a value to change what width to expand data
-                   values(x,y) = nanmean(nanmean(dataFiltered(x-3:x+3, y-3:y+3))); % should set a value to change what width to expand data
+          for x = 2:length(dataFiltered(:,1))-2 % should set a value to change what width to expand data
+               for y = 2:length(dataFiltered(1,:))-2  % should set a value to change what width to expand data
+                   values(x,y) = nanmean(nanmean(dataFiltered(x-1:x+1, y-1:y+1))); % should set a value to change what width to expand data
                end
           end
           
-     values(1:200,250:683) = 0;      
-     values(500:565,600:683) = 0;
-    values(values >= 0.5) = 0;
-    values(values == 0) = NaN;
+%      values(1:200,250:683) = 0;      
+%      values(500:565,600:683) = 0;
+     values(values >= 1.5) = 1.5;
+     values(values == 0) = NaN;
     nanMask_expanded  = isnan(values);
     oppNaN = 1 - nanMask_expanded;
     
@@ -130,7 +130,7 @@ function Plot_data(result, im, imageName, lowCutoff, highCutoff, pointSelection,
     ax = gca;
     ax2 = axes;
     %im = imagesc(ax2, dataFiltered); %only shows real data
-    im = imagesc(ax2,values); % shows expanded data
+    im = imagesc(ax2,values); % shows pixel expanded data
     im.AlphaData = (oppNaN );
     mymap = load('HeterogeneityColormapRedYellowGreen.mat');
     colormap(ax2, mymap.mymap);

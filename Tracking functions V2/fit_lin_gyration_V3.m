@@ -32,7 +32,7 @@ for k = 1:length(filename)
         %% Linear fit of all the trajectories that have a min length > min_track_length_lin
          %exist(fullfile(cd, 'tracked_Traj_atg13_rep2_3_2.tif.mat'), 'file')
         isolate_idx = [];
-
+        track_length = zeros(1,num_tracks);
         if min_track_length_lin < 11
             min_track_length_lin = 11;
         end
@@ -41,12 +41,13 @@ for k = 1:length(filename)
             if length(result(j).tracking.x) >= min_track_length_lin
                 isolate_idx = [isolate_idx;j];
             end
+            track_length(j) = length(result(j).tracking.x);
         end
 
         size_rest_data = length(isolate_idx);
 
 
-        lin_fit = cell(size_rest_data,6); % changed second value to 6 because I added 2 more values
+        lin_fit = cell(size_rest_data,7); % changed second value to 7 because I added 3 more values (x and y centroid and track length)
 
         Dlin = zeros(1,size_rest_data);
         Dlin_err = zeros(1,size_rest_data);
@@ -56,6 +57,7 @@ for k = 1:length(filename)
         Dlin_centroid_x(:,:) = {0};
         Dlin_centroid_y = cell(1,size_rest_data);
         Dlin_centroid_y(:,:) = {0};
+       
 
 
         parfor j = 1:size_rest_data
@@ -80,7 +82,7 @@ for k = 1:length(filename)
 
         end
 
-        lin_fit = {{Dlin},{Dlin_err},{Dlin_gof_rsquare},{Dlin_gof_rmse},{Dlin_centroid_x},{Dlin_centroid_y}};
+        lin_fit = {{Dlin},{Dlin_err},{Dlin_gof_rsquare},{Dlin_gof_rmse},{Dlin_centroid_x},{Dlin_centroid_y}, {track_length}};
 
 
         %% Corraled analysis of all the trajectories that have a min length > min_track_length_expo
@@ -179,11 +181,12 @@ for k = 1:length(filename)
            if length(result(j).tracking.x) >= min_track_length_lin
                 isolate_idx = [isolate_idx;j];
                 size_track = [size_track;length(result(j).tracking.x)]; 
-            end
+           end
+           
         end
 
         size_rest_data = length(isolate_idx);
-
+ 
         max_track = max(size_track);
         MSD_e = zeros(1,max_track);
         MSD_t = zeros(1,max_track);
@@ -271,11 +274,11 @@ for k = 1:length(filename)
 
 
         %% Last step, saving the data
-        lin_fit = {{Dlin},{Dlin_err},{Dlin_gof_rsquare},{Dlin_gof_rmse},{Dlin_centroid_x},{Dlin_centroid_y}};
+        lin_fit = {{Dlin},{Dlin_err},{Dlin_gof_rsquare},{Dlin_gof_rmse},{Dlin_centroid_x},{Dlin_centroid_y},{track_length}};
 
         row_headings = {'D_corr','R_c','track_index'};
         extract_corr = cell2struct(corr_fit,row_headings,2);
-        row_headings = {'D_lin','D_lin_err','gof_rsquare','gof_rmse','Dlin_centroid_x','Dlin_centroid_y'};
+        row_headings = {'D_lin','D_lin_err','gof_rsquare','gof_rmse','Dlin_centroid_x','Dlin_centroid_y', 'track_length'};
         extract_lin = cell2struct(lin_fit,row_headings,2);
         row_headings = {'MSD_ens','MSD_time'};
         extract_MSD = cell2struct(MSD,row_headings,2);
